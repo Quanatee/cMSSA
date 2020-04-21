@@ -4,6 +4,7 @@ import numpy as np
 from multiprocessing import Pool
 from scipy import linalg
 from sklearn.cluster import SpectralClustering
+from psutil import cpu_count
 
 
 class CMSSA(object):
@@ -126,16 +127,16 @@ class CMSSA(object):
 
     def compute_best_alphas(self,
                             return_size=10,
-                            candidate_size=100,
-                            min_log_alpha=-1,
-                            max_log_alpha=3,
+                            candidate_size=7,
+                            min_alpha=1,
+                            max_alpha=20,
                             matrix_norm='nuc'):
 
         if self._verbose:
             print("Generating candidate alphas...")
 
         # generate candidates
-        candidates = np.logspace(min_log_alpha, max_log_alpha, candidate_size)
+        candidates = np.linspace(min_alpha, max_alpha, candidate_size)
         candidates = np.concatenate(([0], candidates))  # add zero as candidate
 
         if self._verbose:
@@ -159,7 +160,7 @@ class CMSSA(object):
         # cluster
         algo = SpectralClustering(n_clusters=return_size,
                                   affinity='precomputed',
-                                  n_jobs=-1)
+                                  n_jobs=int(cpu_count()*0.25))
 
         if self._verbose:
             print("Clustering alphas...", end='')
