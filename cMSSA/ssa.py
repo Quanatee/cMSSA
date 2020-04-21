@@ -217,7 +217,7 @@ class CMSSA(object):
         self.set_eigen()
         A = self.project(X)
         if space == 'A':
-            return A
+            return np.real(A)
         elif space == 'R':
             R = self.reconstruct(A, X,
                                  collapse=collapse,
