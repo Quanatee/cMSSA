@@ -124,7 +124,10 @@ class CMSSA(object):
         mean_bg, std_bg = self.stats(X_bg)
         X_bg = self.normalize(X_bg, mean_bg, std_bg)
         self.C_bg = self.cov(X_bg)
-
+        del X_fg, X_bg
+        self.set_eigen()
+        del self.C_fg, self.C_bg
+        
     def compute_best_alphas(self,
                             return_size=10,
                             candidate_size=7,
@@ -215,7 +218,6 @@ class CMSSA(object):
                   collapse=True,
                   flatten=False,
                   denormalize=False):
-        self.set_eigen()
         A = self.project(X)
         if space == 'A':
             return np.real(A)
